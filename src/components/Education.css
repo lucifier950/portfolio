@@ -1,0 +1,85 @@
+.education {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 80px 32px;
+  scroll-margin-top: 80px;
+}
+
+/* The timeline wrapper. position: relative makes it the anchor
+   for the absolutely-positioned vertical line and dots inside. */
+.timeline {
+  position: relative;
+  padding-left: 40px; /* leave room on the left for the line + dots */
+}
+
+/* The vertical line running down the whole timeline.
+   We draw it with ::before — no extra HTML element needed. */
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background-color: var(--color-border);
+}
+
+/* Each entry */
+.timeline__item {
+  position: relative; /* anchor for this item's dot */
+  padding-bottom: 40px;
+}
+
+.timeline__item:last-child {
+  padding-bottom: 0; /* no gap after the final entry */
+}
+
+/* The dot for each item, sitting ON the vertical line.
+   left: -40px pulls it back into the padding we reserved. */
+.timeline__item::before {
+  content: '';
+  position: absolute;
+  left: -40px;
+  top: 6px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  border: 3px solid var(--color-bg); /* ring effect against the line */
+}
+
+.timeline__tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-primary);
+  background-color: var(--color-surface);
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin-bottom: 8px;
+}
+
+.timeline__title {
+  font-size: 1.25rem;
+  color: var(--color-text);
+}
+
+.timeline__place {
+  color: var(--color-text);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+.timeline__period {
+  display: inline-block;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin: 4px 0 8px;
+}
+
+.timeline__detail {
+  color: var(--color-text-muted);
+  font-size: 0.98rem;
+}

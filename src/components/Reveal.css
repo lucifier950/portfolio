@@ -1,0 +1,24 @@
+/* Starting state: invisible and nudged 30px down. */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* End state: fully visible, back in place. Adding the
+   --visible class triggers the transition above. */
+.reveal--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Accessibility: some users set "reduce motion" in their OS to
+   avoid animations (motion sickness, etc.). Respect that — show
+   content instantly with no movement. */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

@@ -1,0 +1,84 @@
+.about {
+  max-width: 900px;
+  margin: 0 auto; /* center the section horizontally */
+  padding: 80px 32px;
+  scroll-margin-top: 80px;
+}
+
+/* A shared section heading style we'll reuse in other sections too. */
+.section-title {
+  font-size: 2.2rem;
+  color: var(--color-text);
+  margin-bottom: 32px;
+  position: relative;
+  padding-bottom: 12px;
+}
+
+/* A little colored underline accent beneath each section title. */
+.section-title::after {
+  content: ''; /* required for ::after to appear */
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 60px;
+  height: 4px;
+  background-color: var(--color-primary);
+  border-radius: 2px;
+}
+
+.about__body p {
+  font-size: 1.1rem;
+  color: var(--color-text-muted);
+  margin-bottom: 20px;
+}
+
+.about__body strong {
+  color: var(--color-text); /* make highlighted words stand out */
+}
+
+/* The stats strip uses CSS GRID — different from flexbox.
+   Grid is great for evenly-sized cells in rows/columns. */
+.about__stats {
+  display: grid;
+  /* 4 equal columns on desktop */
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 40px;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column; /* stack value above label */
+  align-items: center;
+  text-align: center;
+  padding: 24px 12px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-primary);
+}
+
+.stat-card__value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.stat-card__label {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin-top: 4px;
+}
+
+/* RESPONSIVE: on phones, show 2 columns instead of 4 so the
+   cards don't get squished. */
+@media (max-width: 600px) {
+  .about__stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

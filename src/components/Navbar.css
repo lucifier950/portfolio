@@ -1,0 +1,63 @@
+/* The bar itself. position: sticky keeps it pinned to the top
+   as you scroll down the page. */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100; /* sit ABOVE other content, not under it */
+
+  display: flex;              /* lay children out in a row */
+  align-items: center;        /* vertically center them */
+  justify-content: space-between; /* push brand left, toggle right */
+  gap: 24px;
+
+  padding: 16px 32px;
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  /* match the smooth color fade when the theme flips */
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Brand name on the left */
+.navbar__brand {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--color-text);
+  text-decoration: none; /* remove the default underline on links */
+}
+
+/* The <ul> holding the links */
+.navbar__links {
+  display: flex;
+  gap: 24px;
+  list-style: none; /* remove the bullet points */
+  margin-left: auto; /* push links toward the right, next to toggle */
+}
+
+.navbar__links a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+/* :hover = styles applied while the mouse is over the link */
+.navbar__links a:hover {
+  color: var(--color-primary);
+}
+
+/* The round toggle button */
+.navbar__toggle {
+  font-size: 1.2rem;
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: 50%; /* a perfect circle */
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.navbar__toggle:hover {
+  border-color: var(--color-primary);
+  transform: scale(1.1); /* grow slightly on hover */
+}

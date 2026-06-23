@@ -1,0 +1,95 @@
+.contact {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 80px 32px;
+  scroll-margin-top: 80px;
+  text-align: center;
+}
+
+/* center the section-title underline since this section is centered */
+.contact .section-title {
+  display: inline-block;
+}
+
+.contact__intro {
+  color: var(--color-text-muted);
+  font-size: 1.1rem;
+  margin-bottom: 40px;
+}
+
+/* Row of contact link cards */
+.contact__links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.contact__link {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  text-decoration: none;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.contact__link:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-primary);
+}
+
+.contact__link-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.contact__link-value {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  word-break: break-word; /* long emails wrap instead of overflowing */
+}
+
+/* The form: a vertical stack of inputs */
+.contact__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: left;
+}
+
+.contact__form input,
+.contact__form textarea {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 1rem;
+  font-family: inherit; /* match the page font, not the browser default */
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  transition: border-color 0.2s ease;
+}
+
+/* :focus = styles while the field is selected/being typed in */
+.contact__form input:focus,
+.contact__form textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.contact__form textarea {
+  resize: vertical; /* user can drag to resize height, but not width */
+}
+
+.contact__form .btn {
+  align-self: center;
+  border: none;
+  font-size: 1rem;
+}

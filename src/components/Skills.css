@@ -1,0 +1,62 @@
+.skills {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 80px 32px;
+  scroll-margin-top: 80px;
+}
+
+/* The grid of category cards. auto-fit + minmax makes it
+   RESPONSIVE automatically — no @media query needed.
+   "Fit as many columns as can be at least 260px wide; share
+   leftover space equally." Fewer columns on narrow screens. */
+.skills__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+.skill-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 24px;
+  transition: transform 0.2s ease, border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.skill-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow);
+}
+
+.skill-card__title {
+  font-size: 1.2rem;
+  color: var(--color-primary);
+  margin-bottom: 16px;
+}
+
+/* The list of pills inside a card. flex-wrap lets pills flow
+   onto multiple lines when they run out of room. */
+.skill-card__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+}
+
+/* Each individual skill "pill" (rounded tag) */
+.skill-pill {
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  padding: 6px 14px;
+  border-radius: 999px; /* huge radius = fully rounded ends */
+  font-size: 0.9rem;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.skill-pill:hover {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}

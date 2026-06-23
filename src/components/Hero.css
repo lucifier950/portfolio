@@ -1,0 +1,97 @@
+.hero {
+  /* min-height fills most of the screen so the hero feels big.
+     calc() subtracts the navbar's height so it doesn't overflow. */
+  min-height: calc(100vh - 73px);
+
+  display: flex;
+  align-items: center; /* vertically center the content */
+  padding: 32px;
+  scroll-margin-top: 80px;
+}
+
+.hero__content {
+  max-width: 760px; /* don't let text stretch too wide to read */
+}
+
+.hero__greeting {
+  color: var(--color-primary);
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.hero__name {
+  font-size: 3.5rem;
+  line-height: 1.1;
+  color: var(--color-text);
+  margin-bottom: 8px;
+}
+
+.hero__role {
+  font-size: 2rem;
+  color: var(--color-text-muted);
+  margin-bottom: 24px;
+}
+
+.hero__tagline {
+  font-size: 1.15rem;
+  color: var(--color-text-muted);
+  margin-bottom: 32px;
+}
+
+/* The row of buttons */
+.hero__actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap; /* on small screens, buttons drop to next line */
+}
+
+/* ===== Reusable button styles =====
+   .btn is the base; the .btn--* modifiers change the colors.
+   We'll reuse these buttons elsewhere too. */
+.btn {
+  display: inline-block;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px); /* lift up slightly on hover */
+}
+
+.btn--primary {
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+
+.btn--primary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.btn--outline {
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+}
+
+.btn--outline:hover {
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+
+/* ===== RESPONSIVE: phones and small screens =====
+   This @media block applies ONLY when the screen is 600px
+   wide or less. We shrink the big text so it fits. */
+@media (max-width: 600px) {
+  .hero__name {
+    font-size: 2.5rem;
+  }
+  .hero__role {
+    font-size: 1.4rem;
+  }
+}

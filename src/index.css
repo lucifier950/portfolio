@@ -1,0 +1,60 @@
+/* A tiny "reset" so the browser's default margins don't surprise us */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* width includes padding + border (very important!) */
+}
+
+/* Smooth-scroll the whole page: clicking #about glides there
+   instead of jumping instantly. */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ============================================================
+   THEME VARIABLES
+   These are "CSS custom properties" (a.k.a. CSS variables).
+   We define them once here, then use them everywhere with var().
+   ============================================================ */
+
+/* :root is the <html> element — the top of the page.
+   Variables defined here are the DEFAULT (light) theme. */
+:root {
+  --color-bg: #ffffff;          /* page background */
+  --color-surface: #f1f5f9;     /* cards, panels (slightly off-white) */
+  --color-text: #0f172a;        /* main text (near-black navy) */
+  --color-text-muted: #475569;  /* secondary text (gray) */
+  --color-primary: #2563eb;     /* Professional Blue — buttons, links */
+  --color-primary-hover: #1d4ed8;
+  --color-border: #e2e8f0;      /* thin lines, card edges */
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+  --color-navy: #1e3a8a;        /* deep navy accent */
+  --color-sky: #38bdf8;         /* sky-blue accent */
+}
+
+/* When <html> has the attribute data-theme="dark",
+   THESE values override the ones above. Same variable names,
+   different colors — so the whole site flips at once. */
+[data-theme='dark'] {
+  --color-bg: #0f172a;          /* deep navy background */
+  --color-surface: #1e293b;     /* slightly lighter panels */
+  --color-text: #f1f5f9;        /* near-white text */
+  --color-text-muted: #94a3b8;
+  --color-primary: #38bdf8;     /* brighter blue pops on dark */
+  --color-primary-hover: #0ea5e9;
+  --color-border: #334155;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+
+  /* Use the variables instead of hardcoded colors. */
+  background-color: var(--color-bg);
+  color: var(--color-text);
+
+  /* Animate the color change so the toggle feels smooth, not jarring. */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
