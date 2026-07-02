@@ -1,85 +1,445 @@
+/* ============================================================
+   EDUCATION & JOURNEY — four independent space "modules"
+   Each block sets its own --accent; cards read it for glow, border and icon.
+   ============================================================ */
+
 .education {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 80px 32px;
+  position: relative;
+  isolation: isolate; /* own stacking context so the space layer stays behind */
+  overflow: hidden; /* contain drifting particles + shooting stars */
+  padding: 90px 0;
   scroll-margin-top: 80px;
 }
 
-/* The timeline wrapper. position: relative makes it the anchor
-   for the absolutely-positioned vertical line and dots inside. */
-.timeline {
+.education__inner {
   position: relative;
-  padding-left: 40px; /* leave room on the left for the line + dots */
+  z-index: 1; /* all real content sits above the ambient space layer */
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 0 32px;
 }
 
-/* The vertical line running down the whole timeline.
-   We draw it with ::before — no extra HTML element needed. */
-.timeline::before {
-  content: '';
-  position: absolute;
-  left: 7px;
-  top: 8px;
-  bottom: 8px;
-  width: 2px;
-  background-color: var(--color-border);
+/* Each module gets generous separate spacing so boundaries are obvious. */
+.edu-block {
+  padding: 46px 0;
+}
+.edu-block + .edu-block {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-/* Each entry */
-.timeline__item {
-  position: relative; /* anchor for this item's dot */
-  padding-bottom: 40px;
+/* ---------------- section heading ---------------- */
+.edu-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
 }
-
-.timeline__item:last-child {
-  padding-bottom: 0; /* no gap after the final entry */
+.edu-head__icon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  flex: none;
+  border-radius: 15px;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  box-shadow: 0 0 26px color-mix(in srgb, var(--accent) 40%, transparent), inset 0 0 14px color-mix(in srgb, var(--accent) 18%, transparent);
+  animation: eduIconFloat 5s ease-in-out infinite;
 }
-
-/* The dot for each item, sitting ON the vertical line.
-   left: -40px pulls it back into the padding we reserved. */
-.timeline__item::before {
-  content: '';
-  position: absolute;
-  left: -40px;
-  top: 6px;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background-color: var(--color-primary);
-  border: 3px solid var(--color-bg); /* ring effect against the line */
+@keyframes eduIconFloat {
+  0%, 100% {
+    transform: translateY(0);
+    box-shadow: 0 0 22px color-mix(in srgb, var(--accent) 34%, transparent), inset 0 0 14px color-mix(in srgb, var(--accent) 16%, transparent);
+  }
+  50% {
+    transform: translateY(-4px);
+    box-shadow: 0 0 34px color-mix(in srgb, var(--accent) 55%, transparent), inset 0 0 16px color-mix(in srgb, var(--accent) 24%, transparent);
+  }
 }
-
-.timeline__tag {
-  display: inline-block;
-  font-size: 0.75rem;
-  font-weight: 600;
+.edu-head__eyebrow {
+  display: block;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--color-primary);
-  background-color: var(--color-surface);
-  padding: 3px 10px;
-  border-radius: 999px;
-  margin-bottom: 8px;
+  color: color-mix(in srgb, var(--accent) 80%, #ffffff);
+}
+.edu-head__title {
+  font-size: clamp(1.6rem, 3vw, 2.15rem);
+  line-height: 1.05;
+  color: var(--color-text);
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.6);
 }
 
-.timeline__title {
-  font-size: 1.25rem;
+/* ---------------- shared card ---------------- */
+.edu-card {
+  position: relative;
+  border-radius: 18px;
+  padding: 24px 26px;
+  /* Darker glass so text always stays high-contrast over the galaxy (req #7). */
+  background: rgba(7, 12, 26, 0.72);
+  border: 1px solid color-mix(in srgb, var(--accent) 24%, rgba(255, 255, 255, 0.08));
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.4);
+  transform-style: preserve-3d;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease, background 0.3s ease;
+  will-change: transform;
+}
+/* Hover: intensify border glow + blur; the lift/tilt come from Framer (req #5). */
+.edu-card:hover {
+  background: rgba(9, 15, 32, 0.8);
+  border-color: color-mix(in srgb, var(--accent) 60%, transparent);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.5), 0 0 34px color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+/* ---------------- 1 · Education card ---------------- */
+.edu-degree__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: flex-start;
+}
+.edu-degree__title {
+  font-size: 1.3rem;
   color: var(--color-text);
 }
-
-.timeline__place {
+.edu-degree__place {
   color: var(--color-text);
   font-weight: 500;
-  margin-top: 2px;
+  margin-top: 3px;
 }
-
-.timeline__period {
+.edu-degree__period {
   display: inline-block;
-  font-size: 0.85rem;
+  font-size: 0.86rem;
   color: var(--color-text-muted);
-  margin: 4px 0 8px;
+  margin-top: 6px;
+}
+.edu-degree__cgpa {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 16px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+}
+.edu-degree__cgpaValue {
+  font-family: 'Space Grotesk', 'Inter', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: color-mix(in srgb, var(--accent) 70%, #ffffff);
+}
+.edu-degree__cgpaLabel {
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+.edu-degree__course {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+.edu-degree__courseLabel {
+  display: block;
+  font-size: 0.74rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: 12px;
+}
+.edu-degree__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  list-style: none;
+}
+.edu-chip {
+  font-size: 0.86rem;
+  color: var(--color-text);
+  padding: 6px 13px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid color-mix(in srgb, var(--accent) 26%, rgba(255, 255, 255, 0.08));
 }
 
-.timeline__detail {
+/* ---------------- 2 · Achievements ---------------- */
+.ach-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 18px;
+}
+.ach-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+}
+.ach__value {
+  font-family: 'Space Grotesk', 'Inter', sans-serif;
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1;
+  color: color-mix(in srgb, var(--accent) 72%, #ffffff);
+  text-shadow: 0 0 26px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+.ach__label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-top: 6px;
+}
+.ach__sub {
+  font-size: 0.84rem;
   color: var(--color-text-muted);
-  font-size: 0.98rem;
+}
+
+/* ---------------- 3 · Journey timeline ---------------- */
+.journey {
+  position: relative;
+  padding-left: 46px; /* room for rail + nodes */
+}
+/* The scroll progress rail beside the timeline (req #9) */
+.journey__rail {
+  position: absolute;
+  left: 7px;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.09);
+  overflow: visible;
+}
+.journey__fill {
+  position: absolute;
+  inset: 0;
+  transform-origin: top center;
+  border-radius: 999px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 90%, #ffffff), var(--accent));
+  box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 70%, transparent);
+}
+/* Glowing head that rides the fill tip = clear progress cue */
+.journey__head {
+  position: absolute;
+  left: 50%;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: #ffffff;
+  box-shadow: 0 0 14px 3px color-mix(in srgb, var(--accent) 85%, transparent);
+}
+
+.journey__items {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+.journey__item {
+  position: relative;
+}
+/* Node dot on the rail. Dim by default → illuminated once reached → pulses when active. */
+.journey__node {
+  position: absolute;
+  left: -44px;
+  top: 22px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #1a2740;
+  border: 2px solid rgba(255, 255, 255, 0.18);
+  transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+  z-index: 2;
+}
+.journey__node.is-reached {
+  background: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 80%, #ffffff);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 75%, transparent);
+}
+.journey__node.is-active {
+  animation: journeyPulse 1.8s ease-in-out infinite;
+}
+@keyframes journeyPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent), 0 0 16px color-mix(in srgb, var(--accent) 70%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 8px color-mix(in srgb, var(--accent) 0%, transparent), 0 0 26px color-mix(in srgb, var(--accent) 90%, transparent);
+  }
+}
+.journey__card.is-active {
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.48), 0 0 30px color-mix(in srgb, var(--accent) 26%, transparent);
+}
+.journey__year {
+  display: inline-block;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: color-mix(in srgb, var(--accent) 80%, #ffffff);
+  padding: 3px 11px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  margin-bottom: 10px;
+}
+.journey__title {
+  font-size: 1.18rem;
+  color: var(--color-text);
+}
+.journey__detail {
+  color: var(--color-text-muted);
+  font-size: 0.96rem;
+  margin-top: 5px;
+}
+
+/* ---------------- 4 · Workshops ---------------- */
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+.work-card__period {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--accent) 80%, #ffffff);
+  margin-bottom: 8px;
+}
+.work-card__title {
+  font-size: 1.15rem;
+  color: var(--color-text);
+}
+.work-card__place {
+  color: var(--color-text);
+  font-weight: 500;
+  margin-top: 3px;
+  font-size: 0.94rem;
+}
+.work-card__detail {
+  color: var(--color-text-muted);
+  font-size: 0.94rem;
+  margin-top: 10px;
+}
+
+/* ============================================================
+   AMBIENT SPACE LAYER — behind all cards, never over text (req #6/#7)
+   ============================================================ */
+.edu-space {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.edu-neb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.16;
+  animation: eduNeb 26s ease-in-out infinite;
+}
+.edu-neb--a {
+  width: 480px;
+  height: 480px;
+  left: -120px;
+  top: 8%;
+  background: radial-gradient(circle, #3a6ad6, transparent 70%);
+}
+.edu-neb--b {
+  width: 520px;
+  height: 520px;
+  right: -140px;
+  bottom: 6%;
+  background: radial-gradient(circle, #7a4bd0, transparent 70%);
+  animation-delay: -12s;
+}
+@keyframes eduNeb {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(26px, -22px) scale(1.08);
+  }
+}
+.edu-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: #cde0ff;
+  opacity: var(--o, 0.4);
+  animation: eduFloat var(--dur, 8s) ease-in-out var(--delay, 0s) infinite;
+}
+@keyframes eduFloat {
+  0%, 100% {
+    transform: translate(0, 0);
+    opacity: var(--o, 0.4);
+  }
+  50% {
+    transform: translate(10px, -26px);
+    opacity: calc(var(--o, 0.4) * 1.5);
+  }
+}
+.edu-shoot {
+  position: absolute;
+  width: 130px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, rgba(200, 220, 255, 0.9));
+  opacity: 0;
+  transform: rotate(20deg);
+}
+.edu-shoot--a {
+  top: 14%;
+  left: 8%;
+  animation: eduShoot 11s ease-in 3s infinite;
+}
+.edu-shoot--b {
+  top: 60%;
+  left: 40%;
+  animation: eduShoot 13s ease-in 8s infinite;
+}
+@keyframes eduShoot {
+  0%, 100% {
+    opacity: 0;
+    transform: translate(0, 0) rotate(20deg);
+  }
+  3% {
+    opacity: 0;
+  }
+  6% {
+    opacity: 0.9;
+  }
+  14% {
+    opacity: 0;
+    transform: translate(280px, 100px) rotate(20deg);
+  }
+  15%, 100% {
+    opacity: 0;
+  }
+}
+
+/* Respect reduced-motion: stop ambient drift + icon float. */
+@media (prefers-reduced-motion: reduce) {
+  .edu-neb,
+  .edu-particle,
+  .edu-shoot,
+  .edu-head__icon,
+  .journey__node.is-active {
+    animation: none;
+  }
+}
+
+/* ---------------- responsive ---------------- */
+@media (max-width: 620px) {
+  .edu-degree__top {
+    flex-direction: column;
+  }
+  .edu-head__title {
+    font-size: 1.5rem;
+  }
 }

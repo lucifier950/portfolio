@@ -1,8 +1,24 @@
 .footer {
+  position: relative;
   text-align: center;
-  padding: 40px 32px;
-  border-top: 1px solid var(--color-border);
-  background-color: var(--color-surface);
+  padding: 46px 32px;
+  /* Glassy + transparent so the live galaxy shows through — the footer reads
+     as the calm edge of space, not a flat gray bar bolted onto the page. */
+  background: rgba(6, 11, 24, 0.5);
+  border-top: 1px solid var(--glass-border);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+/* A soft glowing divider that ties the footer to the accent language. */
+.footer::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(620px, 78%);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(79, 155, 255, 0.6), transparent);
 }
 
 .footer__links {

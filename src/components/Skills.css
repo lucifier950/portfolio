@@ -1,128 +1,580 @@
-.skills {
+/* ============================================================
+   SKILLS — cinematic "Core Strengths" solar system
+   ============================================================ */
+
+.skills--scene {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  scroll-margin-top: 80px;
+}
+
+/* The scene fills the viewport; the canvas is a live backdrop and every
+   piece of chrome is an absolutely-positioned overlay on top of it. */
+.skills__scene {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 720px;
+  max-height: 1000px;
+  overflow: hidden;
+}
+
+.skills__canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  /* Feather the top/bottom edges so the 3D scene melts into the surrounding
+     page (the same galaxy backdrop continues behind) instead of reading as a
+     framed box with hard seams. */
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 9%, #000 91%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 9%, #000 91%, transparent 100%);
+}
+.skills__canvas canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Soft edge scrims: darken the far-left (behind the heading) and far-right
+   (behind the Proficiency panel) so text always reads cleanly even when a
+   planet or label drifts near. They fade out in immersive mode. */
+.skills__scene::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(6, 11, 24, 0.92) 0%, rgba(6, 11, 24, 0.6) 11%, rgba(6, 11, 24, 0) 26%),
+    linear-gradient(270deg, rgba(6, 11, 24, 0.88) 0%, rgba(6, 11, 24, 0.55) 10%, rgba(6, 11, 24, 0) 23%);
+  transition: opacity 0.6s ease;
+}
+.skills__scene--immersed::before {
+  opacity: 0;
+}
+
+/* ---------- shared eyebrow / heading / lead ---------- */
+.skills__eyebrow {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.7);
+}
+.skills__title {
+  font-size: clamp(3rem, 6vw, 4.6rem);
+  line-height: 0.95;
+  margin: 10px 0 18px;
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.75);
+}
+.skills__lead {
+  color: var(--color-text);
+  font-size: 1.02rem;
+  line-height: 1.55;
+  max-width: 24ch;
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.85);
+}
+.skills__scrolllink {
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.7);
+}
+
+/* ---------- top-left intro ---------- */
+.skills__intro {
+  position: absolute;
+  top: 9%;
+  left: 4.5%;
+  z-index: 3;
+  max-width: 320px;
+  pointer-events: none;
+}
+.skills__intro > * {
+  pointer-events: auto;
+}
+.skills__scrolllink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 22px;
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+.skills__scrolllink:hover {
+  color: var(--color-primary-hover);
+  transform: translateX(3px);
+}
+
+/* ---------- bottom-left stat cards ---------- */
+.skills__stats {
+  position: absolute;
+  left: 4.5%;
+  bottom: 7%;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.statcard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px 14px 16px;
+  border-radius: 16px;
+  min-width: 190px;
+  transition: transform 0.25s var(--ease-out-expo), border-color 0.25s ease;
+}
+.statcard:hover {
+  transform: translateY(-3px);
+  border-color: rgba(79, 155, 255, 0.5);
+}
+.statcard__icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  flex: none;
+  border-radius: 12px;
+  color: var(--color-primary);
+  background: rgba(79, 155, 255, 0.12);
+  border: 1px solid rgba(79, 155, 255, 0.22);
+}
+.statcard__text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+.statcard__value {
+  font-family: 'Space Grotesk', 'Inter', sans-serif;
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+.statcard__label {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
+/* ---------- right proficiency panel ---------- */
+.proficiency {
+  position: absolute;
+  top: 50%;
+  right: 3%;
+  transform: translateY(-50%);
+  z-index: 3;
+  width: 306px;
+  padding: 22px 22px 20px;
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+}
+.proficiency__head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 1.12rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 18px;
+}
+.proficiency__spark {
+  color: var(--color-primary);
+  font-size: 0.95rem;
+}
+.proficiency__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.prof__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 7px;
+}
+.prof__label {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+.prof__value {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+.prof__track {
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+.prof__fill {
+  height: 100%;
+  border-radius: 999px;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
+}
+.proficiency__cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 22px;
+  padding: 11px;
+  border-radius: 12px;
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 0.92rem;
+  text-decoration: none;
+  background: rgba(79, 155, 255, 0.1);
+  border: 1px solid rgba(79, 155, 255, 0.24);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.proficiency__cta:hover {
+  background: rgba(79, 155, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+/* ---------- center-bottom hint ---------- */
+.skills__hint {
+  position: absolute;
+  left: 50%;
+  bottom: 6.5%;
+  transform: translateX(-50%);
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 18px;
+  border-radius: 999px;
+  background: rgba(10, 18, 36, 0.55);
+  border: 1px solid rgba(120, 160, 255, 0.18);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+}
+
+/* ============================================================
+   PLANET CONNECTOR LABELS (rendered inside the canvas via <Html>)
+   The wrapper is anchored at the planet's projected point; the inline
+   `color` (set per planet) drives the dot, line and title via currentColor.
+   ============================================================ */
+.ptag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  pointer-events: none;
+  --off: 16px;
+}
+/* Side + offset are recomputed every frame in SkillsGalaxy so labels always
+   fan away from the sun and clear the planet's on-screen edge. */
+.ptag[data-side='right'] {
+  transform: translate(var(--off), -50%);
+}
+.ptag[data-side='left'] {
+  transform: translate(calc(var(--off) * -1 - 100%), -50%);
+  flex-direction: row-reverse;
+}
+/* In galaxy mode the label collapses to just its title (moons carry the techs). */
+.ptag.is-compact .ptag__list {
+  display: none;
+}
+.ptag__dot {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 10px currentColor;
+}
+.ptag__line {
+  width: 30px;
+  height: 1px;
+  flex: none;
+  background: linear-gradient(90deg, currentColor, transparent);
+}
+.ptag--left .ptag__line {
+  background: linear-gradient(270deg, currentColor, transparent);
+}
+.ptag__card {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.ptag--left .ptag__card {
+  align-items: flex-end;
+  text-align: right;
+}
+.ptag__title {
+  font-family: 'Space Grotesk', 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+  color: currentColor;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.85);
+  transition: text-shadow 0.2s ease;
+}
+.ptag.is-hover .ptag__title {
+  text-shadow: 0 0 16px currentColor, 0 1px 10px rgba(0, 0, 0, 0.9);
+}
+.ptag__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  margin: 2px 0 0;
+  padding: 0;
+}
+.ptag__skill {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #ccd8ef;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.95);
+  transition: color 0.2s ease;
+}
+.ptag.is-hover .ptag__skill {
+  color: #ffffff;
+}
+
+/* ---------- sun core label ---------- */
+.core-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  pointer-events: none;
+  text-align: center;
+}
+.core-label__title {
+  font-family: 'Space Grotesk', 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 1.4rem;
+  line-height: 1.02;
+  max-width: 130px;
+  color: #1c1205;
+  text-shadow: 0 1px 3px rgba(255, 226, 160, 0.55);
+}
+.core-label__pill {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #2a1a05;
+  background: rgba(255, 226, 172, 0.62);
+  border: 1px solid rgba(120, 70, 10, 0.35);
+  padding: 4px 13px;
+  border-radius: 999px;
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}
+
+/* ---------- moon (tech) labels ---------- */
+.moon-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: currentColor;
+  white-space: nowrap;
+  pointer-events: none;
+  transform: translateY(-14px);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.95);
+}
+
+/* ============================================================
+   IMMERSIVE MODE — fade the chrome out, reveal the galaxy controls
+   ============================================================ */
+.skills__overlay {
+  transition: opacity 0.5s ease, transform 0.6s var(--ease-out-expo);
+}
+.skills__scene--immersed .skills__overlay {
+  opacity: 0;
+  pointer-events: none;
+}
+.skills__scene--immersed .skills__intro {
+  transform: translateX(-16px);
+}
+
+/* The Proficiency panel stays visible in every mode (its content swaps). */
+.proficiency {
+  transition: transform 0.5s var(--ease-out-expo);
+}
+
+/* ---------- focused-planet skills card ---------- */
+.proficiency__dot {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  box-shadow: 0 0 12px currentColor;
+}
+.planetskills {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 4px 0 0;
+  padding: 0;
+}
+.planetskill {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+.planetskill__dot {
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-radius: 50%;
+  box-shadow: 0 0 10px currentColor;
+}
+.proficiency__note {
+  margin-top: 20px;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* Back-to-overview button — portaled to <body>, fixed on screen while immersed.
+   High z-index keeps it above the navbar and the WebGL canvas. */
+.skills__back {
+  position: fixed;
+  top: 90px;
+  right: 28px;
+  z-index: 1000;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 20px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text);
+  cursor: pointer;
+  background: rgba(10, 18, 36, 0.72);
+  border: 1px solid rgba(120, 160, 255, 0.32);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  animation: skillsBackIn 0.5s var(--ease-out-expo) both;
+}
+.skills__back:hover {
+  background: rgba(79, 155, 255, 0.24);
+  border-color: rgba(120, 160, 255, 0.55);
+}
+@keyframes skillsBackIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.skills__hint {
+  transition: opacity 0.4s ease;
+}
+
+/* Hide overlays a touch on shorter/narrower desktops so nothing collides. */
+@media (max-width: 1180px) {
+  .proficiency {
+    width: 270px;
+    right: 2.5%;
+  }
+  .skills__intro {
+    max-width: 280px;
+  }
+}
+@media (max-width: 1040px) {
+  .skills__lead {
+    display: none;
+  }
+}
+
+/* ============================================================
+   FALLBACK (mobile / reduced-motion / no-WebGL) — stacked layout
+   ============================================================ */
+.skills--fallback {
   max-width: 1000px;
   margin: 0 auto;
   padding: 80px 32px;
   scroll-margin-top: 80px;
 }
-
-/* ===== 3D skill-planet system ===== */
-.skills__galaxy {
-  position: relative;
-  width: 100%;
-  height: 520px;
-  margin-bottom: 48px;
-  border-radius: 24px;
-  overflow: hidden;
-  /* Soft dark vignette so the glowing planets pop against a calm center,
-     while the edges stay transparent and the cosmos still bleeds in. */
-  background: radial-gradient(
-    ellipse 75% 80% at 50% 45%,
-    rgba(5, 10, 24, 0.82) 0%,
-    rgba(5, 10, 24, 0.45) 55%,
-    transparent 82%
-  );
+.skills--fallback .section-title {
+  margin: 8px 0 10px;
 }
-.skills__galaxy canvas {
+.skills--fallback .skills__lead {
   display: block;
-}
-.skills__hint {
-  position: absolute;
-  bottom: 4px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: var(--color-text-muted);
-  font-size: 0.75rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  pointer-events: none;
+  max-width: 46ch;
+  margin-bottom: 36px;
 }
 
-/* Planet hover labels (rendered via drei <Html>). pointer-events:none so the
-   label never intercepts the hover that triggered it. */
-.planet-label {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  pointer-events: none;
-  color: #e8eefc;
-  font-size: 0.82rem;
-  font-weight: 600;
-  white-space: nowrap;
-  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.7);
-  transform: translateY(-4px);
-  transition: transform 0.2s ease;
-}
-.planet-label--active {
-  transform: translateY(-8px);
-}
-.planet-label__skills {
-  font-size: 0.7rem;
-  font-weight: 500;
-  color: #a8c8ff;
-  background: rgba(10, 20, 40, 0.72);
-  border: 1px solid rgba(120, 160, 255, 0.25);
-  padding: 5px 11px;
-  border-radius: 9px;
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
-  white-space: normal;
-  max-width: 240px;
-  text-align: center;
-}
-
-/* The grid of category cards. auto-fit + minmax makes it
-   RESPONSIVE automatically — no @media query needed.
-   "Fit as many columns as can be at least 260px wide; share
-   leftover space equally." Fewer columns on narrow screens. */
 .skills__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
 }
-
 .skill-card {
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
-  padding: 24px;
-  transition: transform 0.2s ease, border-color 0.2s ease,
-    box-shadow 0.2s ease;
+  background: rgba(9, 15, 32, 0.55);
+  border: 1px solid var(--glass-border);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  padding: 22px;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
-
 .skill-card:hover {
   transform: translateY(-4px);
   border-color: var(--color-primary);
-  box-shadow: var(--shadow);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.4), 0 0 24px rgba(79, 155, 255, 0.18);
 }
-
 .skill-card__title {
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   color: var(--color-primary);
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
-
-/* The list of pills inside a card. flex-wrap lets pills flow
-   onto multiple lines when they run out of room. */
 .skill-card__list {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   list-style: none;
 }
-
-/* Each individual skill "pill" (rounded tag) */
 .skill-pill {
   background-color: var(--color-bg);
   border: 1px solid var(--color-border);
   color: var(--color-text-muted);
   padding: 6px 14px;
-  border-radius: 999px; /* huge radius = fully rounded ends */
-  font-size: 0.9rem;
+  border-radius: 999px;
+  font-size: 0.88rem;
   transition: color 0.2s ease, border-color 0.2s ease;
 }
-
 .skill-pill:hover {
   color: var(--color-primary);
   border-color: var(--color-primary);
+}
+
+/* Static (non-absolute) variants of the shared blocks for the fallback flow */
+.proficiency--static {
+  position: static;
+  transform: none;
+  width: 100%;
+  max-width: 460px;
+  margin: 40px auto 0;
+}
+.skills__stats--static {
+  position: static;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 28px;
 }

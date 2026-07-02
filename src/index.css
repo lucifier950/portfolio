@@ -88,6 +88,11 @@ body {
   background-color: transparent;
   color: var(--color-text);
 
+  /* Clip any stray horizontal overflow (e.g. the pinned Projects track) so no
+     horizontal scrollbar appears. `clip` (not `hidden`) doesn't create a
+     scroll container, so it never breaks the Projects position:sticky. */
+  overflow-x: clip;
+
   transition: color 0.3s ease;
 }
 
@@ -105,26 +110,22 @@ h4,
   letter-spacing: -0.035em;
 }
 
-/* Branded text selection + a slim, on-theme custom scrollbar. */
+/* Branded text selection. */
 ::selection {
   background: rgba(79, 155, 255, 0.32);
   color: #ffffff;
 }
+
+/* Hidden scrollbars — scrolling still works via wheel / trackpad / keyboard,
+   we just don't paint the bars (they read as stray white lines over the
+   cinematic backdrop). */
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* old Edge/IE */
+}
 ::-webkit-scrollbar {
-  width: 10px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(79, 155, 255, 0.28);
-  border-radius: 999px;
-  border: 2px solid transparent;
-  background-clip: padding-box;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(79, 155, 255, 0.5);
-  background-clip: padding-box;
+  width: 0;
+  height: 0;
 }
 
 /* ============================================================
@@ -156,4 +157,20 @@ h4,
 html.has-custom-cursor,
 html.has-custom-cursor * {
   cursor: none !important;
+}
+
+/* ============================================================
+   ACCESSIBILITY — visible keyboard focus
+   Mouse users never see this (:focus-visible), but keyboard/AT users get a
+   clear on-theme ring on every interactive element across the site.
+   ============================================================ */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+/* Inputs/textarea already have a strong focus glow — don't double up. */
+.mc-field input:focus-visible,
+.mc-field textarea:focus-visible {
+  outline: none;
 }

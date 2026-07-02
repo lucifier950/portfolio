@@ -1,116 +1,784 @@
-.contact {
-  max-width: 700px;
-  margin: 0 auto;
-  padding: 80px 32px;
+/* ============================================================
+   CONTACT — "Mission Control" communication terminal (grand finale)
+   ============================================================ */
+
+.mc {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: 100px 0 120px;
   scroll-margin-top: 80px;
+  --px: 0;
+  --py: 0;
+}
+
+.mc__inner {
+  position: relative;
+  z-index: 1; /* everything readable sits above the ambient space layer */
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* ---------------- heading ---------------- */
+.mc__head {
   text-align: center;
+  margin-bottom: 54px;
 }
-
-/* center the section-title underline since this section is centered */
-.contact .section-title {
-  display: inline-block;
-}
-
-.contact__intro {
-  color: var(--color-text-muted);
-  font-size: 1.1rem;
-  margin-bottom: 40px;
-}
-
-/* Row of contact link cards */
-.contact__links {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 16px;
-  margin-bottom: 48px;
-}
-
-.contact__link {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 16px;
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
-  text-decoration: none;
-  transition: transform 0.2s ease, border-color 0.2s ease;
-}
-
-.contact__link:hover {
-  transform: translateY(-4px);
-  border-color: var(--color-primary);
-}
-
-.contact__link-label {
-  font-size: 0.8rem;
+.mc__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
   color: var(--color-primary);
-  font-weight: 600;
+}
+.mc__ping {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 10px #34d399;
+  animation: mcPing 1.6s ease-in-out infinite;
+}
+@keyframes mcPing {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.7); }
+}
+.mc__title {
+  display: inline-block; /* so the accent underline can center under the title */
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  margin: 12px 0 16px;
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.6);
+}
+.mc__title.section-title::after {
+  left: 50%;
+  transform: translateX(-50%);
+}
+.mc__subtitle {
+  max-width: 52ch;
+  margin: 0 auto;
+  color: var(--color-text);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.7);
 }
 
-.contact__link-value {
-  font-size: 0.9rem;
-  color: var(--color-text-muted);
-  word-break: break-word; /* long emails wrap instead of overflowing */
+/* ---------------- two-column layout ---------------- */
+.mc__grid {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 34px;
+  align-items: start;
 }
 
-/* The form: a vertical stack of inputs */
-.contact__form {
+/* ---------------- LEFT: channels on comm line ---------------- */
+.mc__channels {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  text-align: left;
+  padding-left: 34px;
 }
-
-.contact__form input,
-.contact__form textarea {
+.mc__line {
+  position: absolute;
+  left: 9px;
+  top: 14px;
+  bottom: 14px;
+  width: 2px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+/* a signal pulse travelling down the comm line */
+.mc__line-fill {
+  position: absolute;
+  left: 0;
   width: 100%;
-  padding: 14px 16px;
-  font-size: 1rem;
-  font-family: inherit; /* match the page font, not the browser default */
+  height: 40%;
+  border-radius: 999px;
+  background: linear-gradient(180deg, transparent, #4f9bff, #8b5cf6, transparent);
+  box-shadow: 0 0 12px rgba(79, 155, 255, 0.7);
+  animation: mcSignal 3.6s linear infinite;
+}
+@keyframes mcSignal {
+  0% { top: -40%; }
+  100% { top: 100%; }
+}
+
+.mc-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  text-align: left;
+  padding: 18px 18px 18px 20px;
+  border-radius: 16px;
+  font: inherit;
   color: var(--color-text);
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  transition: border-color 0.2s ease;
+  background: rgba(9, 15, 32, 0.62);
+  border: 1px solid color-mix(in srgb, var(--accent) 26%, rgba(255, 255, 255, 0.08));
+  -webkit-backdrop-filter: blur(13px);
+  backdrop-filter: blur(13px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  transform-style: preserve-3d;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  will-change: transform;
 }
-
-/* :focus = styles while the field is selected/being typed in */
-.contact__form input:focus,
-.contact__form textarea:focus {
-  outline: none;
-  border-color: var(--color-primary);
+.mc-card::after {
+  /* soft neon glow underneath */
+  content: '';
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: -6px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent);
+  filter: blur(16px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
 }
-
-.contact__form textarea {
-  resize: vertical; /* user can drag to resize height, but not width */
+.mc-card:hover {
+  border-color: color-mix(in srgb, var(--accent) 65%, transparent);
+  background: rgba(12, 19, 40, 0.72);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.5), 0 0 30px color-mix(in srgb, var(--accent) 26%, transparent);
 }
+.mc-card:hover::after { opacity: 0.5; }
 
-.contact__form .btn {
-  align-self: center;
+/* Stretched primary (copy) action — covers the whole card, sits below the
+   visible content and the open link. */
+.mc-card__copy {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
   border: none;
-  font-size: 1rem;
+  background: transparent;
+  border-radius: inherit;
+  cursor: pointer;
+}
+.mc-card__copy:focus-visible {
+  outline-offset: -3px;
+}
+/* Content sits above the copy button but lets clicks fall through to it. */
+.mc-card__icon,
+.mc-card__text {
+  position: relative;
+  z-index: 2;
+  pointer-events: none;
 }
 
-/* disabled button (while sending) looks dimmed and un-clickable */
-.contact__form .btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+/* node sitting on the comm line, aligned to each card */
+.mc-card__node {
+  position: absolute;
+  left: -33px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--color-bg);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 80%, transparent);
+  pointer-events: none;
+  z-index: 2;
+}
+.mc-card:hover .mc-card__node {
+  animation: mcNode 1.4s ease-in-out infinite;
+}
+@keyframes mcNode {
+  0%, 100% { box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 80%, transparent); }
+  50% { box-shadow: 0 0 22px 4px color-mix(in srgb, var(--accent) 90%, transparent); }
 }
 
-/* feedback message under the button */
-.contact__status {
-  text-align: center;
+.mc-card__icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  flex: none;
+  border-radius: 13px;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  box-shadow: inset 0 0 14px color-mix(in srgb, var(--accent) 18%, transparent);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.mc-card:hover .mc-card__icon {
+  box-shadow: 0 0 22px color-mix(in srgb, var(--accent) 55%, transparent), inset 0 0 16px color-mix(in srgb, var(--accent) 26%, transparent);
+}
+.mc-ico { transition: transform 0.35s var(--ease-out-back, ease); }
+.mc-ico__flap { transition: transform 0.35s ease; transform-origin: 12px 7px; }
+
+/* per-channel hover micro-interactions */
+.mc-card--email:hover .mc-ico__flap { transform: rotateX(48deg) translateY(-1px); }
+.mc-card--email:hover .mc-ico--email { transform: translateY(-1px); }
+.mc-card--phone:hover .mc-ico--phone { animation: mcPhone 0.7s ease-in-out infinite; }
+@keyframes mcPhone {
+  0%, 100% { transform: scale(1) rotate(0); }
+  50% { transform: scale(1.12) rotate(-8deg); }
+}
+.mc-card--github:hover .mc-ico--github { transform: rotate(-14deg) scale(1.08); }
+.mc-card--linkedin:hover .mc-card__icon {
+  box-shadow: 0 0 30px 4px color-mix(in srgb, var(--accent) 70%, transparent), inset 0 0 16px color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+.mc-card__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+.mc-card__label {
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--accent) 82%, #ffffff);
+}
+.mc-card__value {
   font-size: 0.95rem;
-  margin: 0;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mc-card__open {
+  position: relative;
+  z-index: 3; /* above the stretched copy button so it stays independently clickable */
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border-radius: 9px;
+  color: var(--color-text-muted);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+.mc-card__open:hover {
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+.mc-card__hint {
+  position: absolute;
+  right: 60px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+.mc-card:hover .mc-card__hint { opacity: 0.9; }
+
+/* ---------------- RIGHT: transmission console ---------------- */
+.mc-console {
+  position: relative;
+  border-radius: 22px;
+  padding: 0 0 26px;
+  overflow: hidden;
+  background: rgba(7, 12, 26, 0.7);
+  border: 1px solid rgba(120, 160, 255, 0.2);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5), inset 0 0 60px rgba(40, 70, 140, 0.08);
+}
+.mc-console__bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.02);
+}
+.mc-console__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+}
+.mc-console__dot:nth-child(1) { background: #ff5f57; }
+.mc-console__dot:nth-child(2) { background: #febc2e; }
+.mc-console__dot:nth-child(3) { background: #28c840; }
+.mc-console__title {
+  margin-left: 8px;
+  font-size: 0.82rem;
+  font-family: 'Space Grotesk', monospace;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
 }
 
-.contact__status--ok {
+/* Transmission beam overlay — sits behind the glass (never over text). */
+.mc-beam-svg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+.mc-beam-line {
+  stroke: #7f9bff;
+  stroke-width: 3;
+  stroke-linecap: round;
+  opacity: 0;
+  filter: drop-shadow(0 0 7px rgba(120, 150, 255, 0.9));
+}
+.mc-beam-pulse {
+  fill: #ffffff;
+  opacity: 0;
+  filter: drop-shadow(0 0 10px #8b5cf6) drop-shadow(0 0 4px #ffffff);
+}
+
+.mc-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 26px 26px 4px;
+  transition: opacity 0.4s ease;
+}
+.mc-form.is-transmitting { opacity: 0.55; }
+
+/* floating-label field with animated border + focus glow */
+.mc-field {
+  position: relative;
+}
+.mc-field input,
+.mc-field textarea {
+  width: 100%;
+  padding: 18px 16px 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  color: var(--color-text);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+.mc-field textarea {
+  resize: vertical;
+  min-height: 140px;
+  padding-top: 24px;
+}
+.mc-field label {
+  position: absolute;
+  left: 16px;
+  top: 15px;
+  font-size: 1rem;
+  color: var(--color-text-muted);
+  pointer-events: none;
+  transform-origin: left top;
+  transition: transform 0.22s var(--ease-out-expo, ease), color 0.22s ease;
+}
+.mc-field input:focus,
+.mc-field textarea:focus {
+  outline: none;
+  border-color: rgba(79, 155, 255, 0.7);
+  background: rgba(79, 155, 255, 0.06);
+  box-shadow: 0 0 0 3px rgba(79, 155, 255, 0.14), 0 0 22px rgba(79, 155, 255, 0.2);
+}
+/* label floats up when focused or filled */
+.mc-field input:focus + label,
+.mc-field input:not(:placeholder-shown) + label,
+.mc-field textarea:focus + label,
+.mc-field textarea:not(:placeholder-shown) + label {
+  transform: translateY(-11px) scale(0.72);
   color: var(--color-primary);
 }
+/* animated underline glow that sweeps in on focus */
+.mc-field__glow {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 0;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #4f9bff, #8b5cf6);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.4s var(--ease-out-expo, ease);
+}
+.mc-field input:focus ~ .mc-field__glow,
+.mc-field textarea:focus ~ .mc-field__glow {
+  transform: scaleX(1);
+}
+/* subtle drifting particles inside the message box */
+.mc-field--message::before {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: 12px;
+  pointer-events: none;
+  background-image: radial-gradient(1.5px 1.5px at 20% 30%, rgba(255, 255, 255, 0.25), transparent),
+    radial-gradient(1.5px 1.5px at 70% 60%, rgba(140, 190, 255, 0.25), transparent),
+    radial-gradient(1.5px 1.5px at 45% 85%, rgba(180, 140, 255, 0.22), transparent);
+  opacity: 0.5;
+  animation: mcMsgDrift 12s ease-in-out infinite alternate;
+}
+@keyframes mcMsgDrift {
+  from { background-position: 0 0, 0 0, 0 0; }
+  to { background-position: 6px -10px, -8px 6px, 4px 8px; }
+}
 
-.contact__status--err {
-  color: #dc2626;
+/* ---------------- the hero SEND button ---------------- */
+.mc-send {
+  position: relative;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  background: linear-gradient(100deg, #4f9bff, #8b5cf6);
+  box-shadow: 0 12px 32px rgba(79, 100, 255, 0.4), 0 0 26px rgba(139, 92, 246, 0.4);
+  overflow: visible;
+  transition: transform 0.28s var(--ease-out-expo, ease), box-shadow 0.3s ease;
+}
+.mc-send__glow {
+  position: absolute;
+  inset: -3px;
+  border-radius: 999px;
+  background: linear-gradient(100deg, #4f9bff, #8b5cf6);
+  filter: blur(16px);
+  opacity: 0.55;
+  z-index: -1;
+  transition: opacity 0.3s ease;
+}
+.mc-send:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 46px rgba(79, 100, 255, 0.55), 0 0 40px rgba(139, 92, 246, 0.6);
+}
+.mc-send:hover:not(:disabled) .mc-send__glow { opacity: 0.9; }
+.mc-send:disabled { cursor: progress; }
+.mc-send__rocket { display: inline-flex; transition: transform 0.3s ease; }
+.mc-send:hover:not(:disabled) .mc-send__rocket { transform: translate(2px, -2px) rotate(8deg); }
+.mc-send__label { position: relative; z-index: 1; }
+
+/* progress sliver under the label while transmitting */
+.mc-send__progress {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: 7px;
+  height: 2px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.85);
+  transform: scaleX(var(--p, 0));
+  transform-origin: left center;
+  transition: transform 0.5s ease;
+}
+/* particles emitted from the button on hover */
+.mc-send__spark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #cfe0ff;
+  opacity: 0;
+  pointer-events: none;
+}
+.mc-send:hover:not(:disabled) .mc-send__spark {
+  animation: mcSpark 0.9s ease-out infinite;
+  animation-delay: calc(var(--i) * 0.12s);
+}
+@keyframes mcSpark {
+  0% { opacity: 0.9; transform: translate(-50%, -50%) scale(1); }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + (var(--i) - 2.5) * 22px), 26px) scale(0.3);
+  }
+}
+
+/* transmission log */
+.mc-log {
+  list-style: none;
+  margin: 20px 0 0;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  font-family: 'Space Grotesk', monospace;
+  font-size: 0.9rem;
+}
+.mc-log__row {
+  display: flex;
+  gap: 10px;
+  color: var(--color-text-muted);
+  padding: 3px 0;
+  transition: color 0.3s ease;
+}
+.mc-log__row.is-done { color: var(--color-text); }
+.mc-log__tick { color: #34d399; width: 14px; }
+
+/* ---------------- success confirmation ---------------- */
+.mc-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 46px 30px 40px;
+}
+.mc-success__badge {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  color: #fff;
+  background: linear-gradient(135deg, #4f9bff, #8b5cf6);
+  box-shadow: 0 0 40px rgba(79, 130, 255, 0.6);
+  margin-bottom: 22px;
+}
+.mc-success__ring {
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 2px solid rgba(120, 170, 255, 0.5);
+  animation: mcRing 1.8s ease-out infinite;
+}
+@keyframes mcRing {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+.mc-success__title {
+  font-family: 'Space Grotesk', 'Inter', sans-serif;
+  font-size: 1.5rem;
+  color: var(--color-text);
+  text-shadow: 0 0 24px rgba(79, 155, 255, 0.4);
+}
+.mc-success__text {
+  color: var(--color-text-muted);
+  margin-top: 10px;
+  max-width: 40ch;
+}
+.mc-success__again {
+  margin-top: 24px;
+  padding: 11px 22px;
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 600;
+  color: var(--color-primary);
+  cursor: pointer;
+  background: rgba(79, 155, 255, 0.1);
+  border: 1px solid rgba(79, 155, 255, 0.3);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.mc-success__again:hover { background: rgba(79, 155, 255, 0.2); transform: translateY(-2px); }
+
+/* ---------------- toast ---------------- */
+.mc-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 34px;
+  transform: translateX(-50%);
+  z-index: 2000;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--color-text);
+  background: rgba(10, 18, 36, 0.85);
+  border: 1px solid rgba(52, 211, 153, 0.5);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.5), 0 0 24px rgba(52, 211, 153, 0.25);
+  animation: mcToast 0.4s var(--ease-out-back, ease) both;
+}
+.mc-toast__check {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #34d399;
+  color: #04231a;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+@keyframes mcToast {
+  from { opacity: 0; transform: translate(-50%, 14px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* ============================================================
+   AMBIENT SPACE — behind glass, never over text
+   ============================================================ */
+.mc-space {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.mc-neb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.2;
+  transform: translate(calc(var(--px) * 10px), calc(var(--py) * 10px));
+  animation: mcNeb 30s ease-in-out infinite;
+}
+.mc-neb--a {
+  width: 560px; height: 560px;
+  left: -140px; top: 4%;
+  background: radial-gradient(circle, #3a6ad6, transparent 70%);
+}
+.mc-neb--b {
+  width: 620px; height: 620px;
+  right: -170px; bottom: 0;
+  background: radial-gradient(circle, #7a4bd0, transparent 70%);
+  animation-delay: -14s;
+}
+@keyframes mcNeb {
+  0%, 100% { transform: translate(calc(var(--px) * 10px), calc(var(--py) * 10px)) scale(1); }
+  50% { transform: translate(calc(var(--px) * 10px + 26px), calc(var(--py) * 10px - 20px)) scale(1.08); }
+}
+
+/* distant planets */
+.mc-planet {
+  position: absolute;
+  border-radius: 50%;
+  transform: translate(calc(var(--px) * 16px), calc(var(--py) * 16px));
+}
+.mc-planet--a {
+  width: 70px; height: 70px;
+  left: 8%; bottom: 16%;
+  background: radial-gradient(circle at 35% 30%, #6ea0ff, #1c3a78 70%, #0c1c40);
+  box-shadow: 0 0 40px rgba(79, 130, 255, 0.35);
+}
+.mc-planet--b {
+  width: 44px; height: 44px;
+  right: 12%; top: 22%;
+  background: radial-gradient(circle at 35% 30%, #c79bff, #5b3aa0 70%, #2a1858);
+  box-shadow: 0 0 30px rgba(150, 100, 255, 0.35);
+}
+
+/* satellite — a clean SVG craft that lights up + pulses on receipt */
+.mc-sat {
+  position: absolute;
+  right: 15%;
+  top: 8%;
+  width: 76px;
+  height: 44px;
+  animation: mcSatFloat 7s ease-in-out infinite;
+}
+.mc-sat__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.45));
+}
+.mc-sat__light {
+  fill: #7fa8ff;
+  transition: fill 0.3s ease;
+}
+.mc-sat.is-signal .mc-sat__light {
+  fill: #34d399;
+  filter: drop-shadow(0 0 5px #34d399);
+  animation: mcSatBlink 0.8s steps(1) infinite;
+}
+/* concentric "signal received" rings emanating from the dish */
+.mc-sat__pulse {
+  position: absolute;
+  left: 50%;
+  top: 12%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border-radius: 50%;
+  border: 1.5px solid #34d399;
+  opacity: 0;
+  pointer-events: none;
+}
+.mc-sat.is-signal .mc-sat__pulse {
+  animation: mcSatPulse 1.8s ease-out infinite;
+}
+.mc-sat.is-signal .mc-sat__pulse--b {
+  animation-delay: 0.9s;
+}
+@keyframes mcSatPulse {
+  0% { transform: scale(0.5); opacity: 0.9; }
+  100% { transform: scale(5); opacity: 0; }
+}
+@keyframes mcSatBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+@keyframes mcSatFloat {
+  0%, 100% { transform: translate(calc(var(--px) * 22px), calc(var(--py) * 22px)); }
+  50% { transform: translate(calc(var(--px) * 22px), calc(var(--py) * 22px - 9px)); }
+}
+
+/* cosmic dust */
+.mc-dust {
+  position: absolute;
+  border-radius: 50%;
+  background: #cfe0ff;
+  opacity: var(--o, 0.4);
+  animation: mcDust var(--dur, 9s) ease-in-out var(--delay, 0s) infinite;
+}
+@keyframes mcDust {
+  0%, 100% { transform: translate(calc(var(--px) * 6px), calc(var(--py) * 6px)); opacity: var(--o, 0.4); }
+  50% { transform: translate(calc(var(--px) * 6px + 8px), calc(var(--py) * 6px - 22px)); opacity: calc(var(--o, 0.4) * 1.5); }
+}
+
+/* shooting stars */
+.mc-shoot {
+  position: absolute;
+  width: 140px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, rgba(200, 220, 255, 0.95));
+  opacity: 0;
+  transform: rotate(20deg);
+}
+.mc-shoot--a { top: 12%; left: 20%; animation: mcShoot 10s ease-in 2s infinite; }
+.mc-shoot--b { top: 46%; left: 55%; animation: mcShoot 13s ease-in 7s infinite; }
+@keyframes mcShoot {
+  0%, 100% { opacity: 0; transform: translate(0, 0) rotate(20deg); }
+  4% { opacity: 0; }
+  7% { opacity: 0.95; }
+  15% { opacity: 0; transform: translate(300px, 108px) rotate(20deg); }
+  16%, 100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mc-neb, .mc-dust, .mc-shoot, .mc__line-fill, .mc-field--message::before,
+  .mc__ping, .mc-success__ring, .mc-sat, .mc-sat.is-signal .mc-sat__light,
+  .mc-sat.is-signal .mc-sat__pulse {
+    animation: none;
+  }
+}
+
+/* ---------------- responsive ---------------- */
+@media (max-width: 900px) {
+  .mc__grid { grid-template-columns: 1fr; gap: 40px; }
+}
+@media (max-width: 620px) {
+  .mc__channels { padding-left: 30px; }
+  .mc-form { padding: 22px 18px 4px; }
+  .mc-card__hint { display: none; }
 }

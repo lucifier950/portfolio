@@ -52,15 +52,19 @@
   align-items: center;
   text-align: center;
   padding: 24px 12px;
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  /* Glass surface to match the rest of the site's premium panels. */
+  background: rgba(9, 15, 32, 0.55);
+  border: 1px solid var(--glass-border);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .stat-card:hover {
   transform: translateY(-4px);
   border-color: var(--color-primary);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.4), 0 0 24px rgba(79, 155, 255, 0.18);
 }
 
 .stat-card__value {

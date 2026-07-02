@@ -165,13 +165,13 @@
    We'll reuse these buttons elsewhere too. */
 .btn {
   display: inline-block;
-  padding: 12px 24px;
-  border-radius: 8px;
+  padding: 13px 28px;
+  border-radius: 999px; /* pill — consistent with badges, nav & the Send button */
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
   transition: transform 0.2s ease, background-color 0.2s ease,
-    color 0.2s ease;
+    color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .btn:hover {

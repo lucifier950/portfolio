@@ -61,24 +61,47 @@
   transform-origin: right;
   transition: transform 0.32s var(--ease-out-expo);
 }
-.navbar__links a:hover::after {
+.navbar__links a:hover::after,
+.navbar__links a.is-active::after {
   transform: scaleX(1);
   transform-origin: left;
 }
 
-/* The round toggle button */
-.navbar__toggle {
-  font-size: 1.2rem;
-  background: none;
-  border: 1px solid var(--color-border);
-  border-radius: 50%; /* a perfect circle */
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
-  transition: border-color 0.2s ease, transform 0.2s ease;
+/* Current section — persistent highlight from the scroll-spy. */
+.navbar__links a.is-active {
+  color: var(--color-primary);
 }
 
-.navbar__toggle:hover {
-  border-color: var(--color-primary);
-  transform: scale(1.1); /* grow slightly on hover */
+/* ===== RESPONSIVE =====
+   On phones the brand + five links won't fit on one row. We let the bar wrap
+   (links drop to a full-width second row, evenly spaced) and shrink type, so it
+   never overflows or shows a horizontal scrollbar — down to 320px. */
+@media (max-width: 640px) {
+  .navbar {
+    padding: 12px 18px;
+    gap: 10px 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .navbar__brand {
+    font-size: 1.05rem;
+  }
+  .navbar__links {
+    width: 100%;
+    margin-left: 0;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 14px;
+  }
+  .navbar__links a {
+    font-size: 0.85rem;
+  }
+  .navbar__links a::after {
+    bottom: -3px;
+  }
+}
+@media (max-width: 380px) {
+  .navbar__links a {
+    font-size: 0.8rem;
+  }
 }

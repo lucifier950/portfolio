@@ -114,7 +114,7 @@ function Hero() {
           </motion.h2>
 
           <motion.p className="hero__tagline" variants={lineVariants}>
-            2nd-year B.Tech CSE student at JIIT, building real-world projects
+            3rd-year B.Tech CSE student at JIIT, building real-world projects
             with Machine Learning, Flask, and C++. Passionate about AI,
             data, and strong DSA fundamentals.
           </motion.p>

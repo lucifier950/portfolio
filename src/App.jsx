@@ -66,13 +66,13 @@ function App() {
             horizontal slide is its own entrance animation. */}
         <Projects />
 
-        <Reveal>
-          <Education />
-        </Reveal>
+        {/* Education & Contact are NOT wrapped in <Reveal>: each drives its own
+            scroll-linked / staggered Framer Motion entrance, and a transformed
+            ancestor would break useScroll measurement (Education) and the
+            transmission beam + parallax (Contact). */}
+        <Education />
 
-        <Reveal>
-          <Contact />
-        </Reveal>
+        <Contact />
       </main>
 
       <Footer />
