@@ -93,3 +93,24 @@
   border: none;
   font-size: 1rem;
 }
+
+/* disabled button (while sending) looks dimmed and un-clickable */
+.contact__form .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* feedback message under the button */
+.contact__status {
+  text-align: center;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.contact__status--ok {
+  color: var(--color-primary);
+}
+
+.contact__status--err {
+  color: #dc2626;
+}

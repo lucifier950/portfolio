@@ -5,6 +5,61 @@
   scroll-margin-top: 80px;
 }
 
+/* ===== Pinned horizontal carousel ===== */
+.projects-h {
+  position: relative;
+  scroll-margin-top: 80px;
+}
+
+/* The panel that stays pinned while the track slides through it. */
+.projects-h__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden; /* clip cards entering/leaving the sides */
+}
+
+.projects-h__head {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto 36px;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.projects-h__hint {
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  animation: hintNudge 1.6s ease-in-out infinite;
+}
+@keyframes hintNudge {
+  0%, 100% { opacity: 0.4; transform: translateX(0); }
+  50% { opacity: 1; transform: translateX(6px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .projects-h__hint { animation: none; }
+}
+
+/* The sliding track. x is driven by Framer from scroll progress. */
+.projects-h__track {
+  display: flex;
+  gap: 28px;
+  padding: 8px 48px; /* breathing room at both ends */
+  will-change: transform;
+}
+
+.projects-h__item {
+  flex: 0 0 auto;
+  width: min(440px, 82vw);
+}
+
 /* Auto-responsive grid of project cards, same pattern as Skills. */
 .projects__grid {
   display: grid;
@@ -12,21 +67,115 @@
   gap: 24px;
 }
 
+/* Smooth conic-border rotation needs an animatable custom angle.
+   @property degrades gracefully: unsupported browsers just show a static edge. */
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
 .project-card {
+  position: relative;
+  isolation: isolate; /* own stacking context so glow layers stay contained */
+  overflow: hidden; /* clip the spotlight, ripple, and border sweep */
   display: flex;
   flex-direction: column; /* stack contents top-to-bottom */
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
+  /* background + blur + hairline border come from the shared .glass class */
+  border-radius: 16px;
   padding: 28px;
-  transition: transform 0.2s ease, border-color 0.2s ease,
-    box-shadow 0.2s ease;
+  /* box-shadow eases on hover; the 3D rotate is driven inline by Framer. */
+  transition: box-shadow 0.3s var(--ease-out-expo);
+  --mx: 50%;
+  --my: 50%;
 }
 
 .project-card:hover {
-  transform: translateY(-6px);
-  border-color: var(--color-primary);
-  box-shadow: var(--shadow);
+  box-shadow: 0 20px 50px -12px rgba(2, 6, 23, 0.45);
+}
+
+/* Keep real content above the decorative glow layers. */
+.project-card__header,
+.project-card__desc,
+.project-card__tech,
+.project-card__link {
+  position: relative;
+  z-index: 1;
+}
+
+/* (2) Cursor-tracked spotlight */
+.project-card__spotlight {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(
+    240px circle at var(--mx) var(--my),
+    rgba(56, 189, 248, 0.18),
+    transparent 45%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+.project-card:hover .project-card__spotlight {
+  opacity: 1;
+}
+
+/* (3) Animated conic border glow (masked to a 1px ring) */
+.project-card__border {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  padding: 1px;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--angle),
+    transparent 0%,
+    var(--color-sky) 12%,
+    var(--color-primary) 20%,
+    transparent 35%
+  );
+  /* show only the border ring: fill minus content-box, XORed */
+  -webkit-mask: linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  animation: borderSpin 4s linear infinite;
+}
+.project-card:hover .project-card__border {
+  opacity: 1;
+}
+@keyframes borderSpin {
+  to { --angle: 360deg; }
+}
+
+/* (4) Click ripple */
+.project-card__ripple {
+  position: absolute;
+  z-index: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(56, 189, 248, 0.35);
+  transform: translate(-50%, -50%) scale(0);
+  pointer-events: none;
+  animation: rippleExpand 0.65s var(--ease-out-expo) forwards;
+}
+@keyframes rippleExpand {
+  to {
+    transform: translate(-50%, -50%) scale(34);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-card__border { animation: none; }
+  .project-card__ripple { display: none; }
 }
 
 .project-card__header {
@@ -71,6 +220,15 @@
   border-radius: 999px;
   font-size: 0.8rem;
   font-weight: 500;
+  transition: transform 0.2s var(--ease-out-back),
+    border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Badge hover physics: a springy lift with an accent ring. */
+.tech-tag:hover {
+  transform: translateY(-3px);
+  border-color: var(--color-primary);
+  box-shadow: 0 4px 14px -4px rgba(56, 189, 248, 0.5);
 }
 
 .project-card__link {
@@ -78,9 +236,11 @@
   text-decoration: none;
   font-weight: 600;
   align-self: flex-start;
-  transition: gap 0.2s ease;
+  letter-spacing: 0.01em;
+  transition: letter-spacing 0.25s var(--ease-out-expo);
 }
 
+/* Nudge the spacing on hover so the "→" glides outward. */
 .project-card__link:hover {
-  text-decoration: underline;
+  letter-spacing: 0.06em;
 }

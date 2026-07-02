@@ -1,32 +1,21 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+import { createContext, useContext, useEffect } from 'react'
 
-// 1. Create the Context object. This is the "channel" components
-//    will use to share the theme. The argument is a default value.
+// The site now uses a SINGLE locked theme: a blue night-sky look.
+// We keep this context/hook so existing callers (App, Navbar) keep working,
+// but it always reports 'dark' and there is no toggle.
 const ThemeContext = createContext()
 
-// 2. The Provider component. We wrap our whole <App /> in this.
-//    Anything inside it can access the theme.
 export function ThemeProvider({ children }) {
-  // 3. State: the current theme. We try to read the user's last
-  //    choice from localStorage; if none, default to 'light'.
-  const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('theme') || 'light'
-  })
+  const theme = 'dark'
 
-  // 4. Every time `theme` changes, do two things as a side effect:
+  // Pin <html data-theme="dark"> so the shader + starfield + CSS all agree.
   useEffect(() => {
-    // a) Set <html data-theme="..."> so our CSS variables switch.
-    document.documentElement.setAttribute('data-theme', theme)
-    // b) Remember the choice so it survives a page refresh.
-    localStorage.setItem('theme', theme)
-  }, [theme]) // <-- only re-run when `theme` changes
+    document.documentElement.setAttribute('data-theme', 'dark')
+  }, [])
 
-  // 5. A helper to flip between the two themes.
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'))
-  }
+  // toggleTheme is a no-op now (kept so any lingering caller doesn't crash).
+  const toggleTheme = () => {}
 
-  // 6. Hand the theme + toggle function to everyone inside.
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
       {children}
@@ -34,8 +23,6 @@ export function ThemeProvider({ children }) {
   )
 }
 
-// 7. A custom hook so components can grab the theme in one line:
-//    const { theme, toggleTheme } = useTheme()
 export function useTheme() {
   return useContext(ThemeContext)
 }

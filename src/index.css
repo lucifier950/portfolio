@@ -5,10 +5,36 @@
   box-sizing: border-box; /* width includes padding + border (very important!) */
 }
 
-/* Smooth-scroll the whole page: clicking #about glides there
-   instead of jumping instantly. */
+/* Lenis (see useSmoothScroll) drives momentum scrolling via JS, so we let it
+   own the wheel. We keep CSS smooth-scroll as the anchor-link + reduced-motion
+   fallback. html holds the base color so the WebGL canvas (z-index:-1) has a
+   guaranteed backdrop if it ever fails to paint. */
 html {
   scroll-behavior: smooth;
+  /* Deep-blue night base: brighter toward the upper-right (where the galaxy
+     band sits) fading to near-black at the edges. This is the GUARANTEED
+     backdrop — the starfield/galaxy canvas layers on top of it. */
+  background: radial-gradient(
+    ellipse 90% 85% at 70% 32%,
+    #142c58 0%,
+    #0c1e42 34%,
+    #07122b 64%,
+    #040912 100%
+  );
+  background-attachment: fixed;
+}
+
+/* Lenis ownership: when it's active it adds these classes to <html>. We must
+   disable CSS smooth-scroll so the two don't fight, per Lenis docs. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
 }
 
 /* ============================================================
@@ -19,42 +45,115 @@ html {
 
 /* :root is the <html> element — the top of the page.
    Variables defined here are the DEFAULT (light) theme. */
+/* SINGLE LOCKED THEME — a blue night sky. These live on :root so there's
+   never a light-mode flash, and they're mirrored on [data-theme='dark']
+   (which ThemeProvider pins) so theme-scoped rules still match. */
 :root {
-  --color-bg: #ffffff;          /* page background */
-  --color-surface: #f1f5f9;     /* cards, panels (slightly off-white) */
-  --color-text: #0f172a;        /* main text (near-black navy) */
-  --color-text-muted: #475569;  /* secondary text (gray) */
-  --color-primary: #2563eb;     /* Professional Blue — buttons, links */
-  --color-primary-hover: #1d4ed8;
-  --color-border: #e2e8f0;      /* thin lines, card edges */
-  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --color-bg: #060b18;          /* deep navy-black night */
+  --color-surface: #0e1a33;     /* panels / cards */
+  --color-text: #e8eefc;        /* near-white text */
+  --color-text-muted: #93a4c4;  /* secondary text */
+  --color-primary: #4f9bff;     /* bright blue — buttons, links, accents */
+  --color-primary-hover: #6fb0ff;
+  --color-border: #21304f;      /* thin lines, card edges */
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
 
   --color-navy: #1e3a8a;        /* deep navy accent */
   --color-sky: #38bdf8;         /* sky-blue accent */
 }
 
-/* When <html> has the attribute data-theme="dark",
-   THESE values override the ones above. Same variable names,
-   different colors — so the whole site flips at once. */
+/* Mirror onto the attribute selector that ThemeProvider sets, so any
+   [data-theme='dark'] rules elsewhere resolve to the same values. */
 [data-theme='dark'] {
-  --color-bg: #0f172a;          /* deep navy background */
-  --color-surface: #1e293b;     /* slightly lighter panels */
-  --color-text: #f1f5f9;        /* near-white text */
-  --color-text-muted: #94a3b8;
-  --color-primary: #38bdf8;     /* brighter blue pops on dark */
-  --color-primary-hover: #0ea5e9;
-  --color-border: #334155;
-  --shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --color-bg: #060b18;
+  --color-surface: #0e1a33;
+  --color-text: #e8eefc;
+  --color-text-muted: #93a4c4;
+  --color-primary: #4f9bff;
+  --color-primary-hover: #6fb0ff;
+  --color-border: #21304f;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
 }
 
 body {
-  font-family: system-ui, -apple-system, sans-serif;
-  line-height: 1.6;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  line-height: 1.65;
+  letter-spacing: -0.003em; /* a hair tighter = more refined at body size */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 
-  /* Use the variables instead of hardcoded colors. */
-  background-color: var(--color-bg);
+  /* TRANSPARENT so the live WebGL backdrop shows through. The base color
+     lives on <html> as the fallback layer. */
+  background-color: transparent;
   color: var(--color-text);
 
-  /* Animate the color change so the toggle feels smooth, not jarring. */
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: color 0.3s ease;
+}
+
+/* Headings use the display face; tighter tracking reads as premium at scale. */
+h1,
+h2,
+h3,
+h4,
+.hero__name,
+.section-title {
+  font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+  letter-spacing: -0.02em;
+}
+.hero__name {
+  letter-spacing: -0.035em;
+}
+
+/* Branded text selection + a slim, on-theme custom scrollbar. */
+::selection {
+  background: rgba(79, 155, 255, 0.32);
+  color: #ffffff;
+}
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(79, 155, 255, 0.28);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(79, 155, 255, 0.5);
+  background-clip: padding-box;
+}
+
+/* ============================================================
+   SHARED MOTION / GLASS DESIGN TOKENS
+   Reusable surfaces + easings the cinematic components share, so the
+   look stays consistent and tunable from one place.
+   ============================================================ */
+:root {
+  /* Frosted-glass surface that floats over the shader backdrop (night theme) */
+  --glass-bg: rgba(17, 25, 40, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-blur: 16px;
+  /* Award-site easings */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* .glass — frosted panel: semi-transparent + backdrop blur + hairline border.
+   Falls back gracefully (just the bg) where backdrop-filter is unsupported. */
+.glass {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+}
+
+/* Hide the OS cursor once our custom cursor is active (added on <html>
+   by the Cursor component, only on fine-pointer devices). */
+html.has-custom-cursor,
+html.has-custom-cursor * {
+  cursor: none !important;
 }

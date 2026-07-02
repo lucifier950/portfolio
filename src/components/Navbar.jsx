@@ -1,10 +1,6 @@
-import { useTheme } from '../ThemeContext.jsx'
+import Magnetic from './effects/Magnetic.jsx'
 import './Navbar.css'
 
-// The list of links. Each `href` points to a section id we'll
-// create in App.jsx (e.g. href="#about" jumps to id="about").
-// Keeping them in an array means we render them with one loop
-// instead of copy-pasting the same <a> tag four times.
 const links = [
   { href: '#about', label: 'About' },
   { href: '#skills', label: 'Skills' },
@@ -14,32 +10,41 @@ const links = [
 ]
 
 function Navbar() {
-  const { theme, toggleTheme } = useTheme()
+  // Route nav clicks through Lenis so jumping to a section uses the SAME
+  // inertia as wheel scrolling — the page glides there cinematically instead
+  // of teleporting. If Lenis isn't active (reduced motion), we let the native
+  // CSS smooth-scroll anchor behavior take over.
+  const handleNav = (e, href) => {
+    if (!window.__lenis) return
+    e.preventDefault()
+    const target = href === '#top' ? 0 : href
+    window.__lenis.scrollTo(target, { offset: -70, duration: 1.4 })
+  }
 
   return (
     <nav className="navbar">
-      {/* Brand / logo on the left. Clicking it jumps to the top. */}
-      <a href="#top" className="navbar__brand">
-        Advik Rajvansh
-      </a>
+      <Magnetic strength={0.25}>
+        <a
+          href="#top"
+          className="navbar__brand"
+          onClick={(e) => handleNav(e, '#top')}
+        >
+          Advik Rajvansh
+        </a>
+      </Magnetic>
 
-      {/* The nav links in the middle/right. */}
       <ul className="navbar__links">
         {links.map((link) => (
           <li key={link.href}>
-            <a href={link.href}>{link.label}</a>
+            <Magnetic strength={0.3}>
+              <a href={link.href} onClick={(e) => handleNav(e, link.href)}>
+                {link.label}
+              </a>
+            </Magnetic>
           </li>
         ))}
       </ul>
 
-      {/* Theme toggle button, now living in the navbar. */}
-      <button
-        className="navbar__toggle"
-        onClick={toggleTheme}
-        aria-label="Toggle dark mode"
-      >
-        {theme === 'light' ? '🌙' : '☀️'}
-      </button>
     </nav>
   )
 }

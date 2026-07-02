@@ -1,6 +1,10 @@
 import { useState } from 'react'
 import './Contact.css'
 
+// Paste YOUR Formspree endpoint here (looks like https://formspree.io/f/abcdwxyz).
+// This is safe to keep in client-side code — Formspree endpoints are public by design.
+const FORMSPREE_ENDPOINT = 'https://formspree.io/f/YOUR_FORM_ID'
+
 // Your contact methods, rendered as a row of links.
 const contactLinks = [
   { label: 'Email', value: 'advikrajvansh49@gmail.com', href: 'mailto:advikrajvansh49@gmail.com' },
@@ -13,6 +17,10 @@ function Contact() {
   // ONE piece of state holding all three fields as an object.
   const [form, setForm] = useState({ name: '', email: '', message: '' })
 
+  // Tracks where we are in the submit lifecycle so the UI can react:
+  // 'idle' (default) | 'sending' | 'success' | 'error'
+  const [status, setStatus] = useState('idle')
+
   // Runs on every keystroke in any input. e.target gives us the
   // element that changed — we read its `name` and `value`.
   const handleChange = (e) => {
@@ -21,15 +29,31 @@ function Contact() {
     setForm((prev) => ({ ...prev, [name]: value }))
   }
 
-  // Runs when the form is submitted.
-  const handleSubmit = (e) => {
+  // Runs when the form is submitted. `async` lets us use `await` below.
+  const handleSubmit = async (e) => {
     e.preventDefault() // stop the browser's default page reload
-    // Build a mailto: link pre-filled with the message.
-    const subject = encodeURIComponent(`Portfolio message from ${form.name}`)
-    const body = encodeURIComponent(
-      `${form.message}\n\nFrom: ${form.name} (${form.email})`
-    )
-    window.location.href = `mailto:advikrajvansh49@gmail.com?subject=${subject}&body=${body}`
+    setStatus('sending') // disables the button + shows "Sending..."
+
+    try {
+      // Send the form data to Formspree as JSON over the network.
+      const response = await fetch(FORMSPREE_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json', // ask Formspree to reply with JSON, not a redirect
+        },
+        body: JSON.stringify(form), // turn our {name, email, message} object into a JSON string
+      })
+
+      if (response.ok) {
+        setStatus('success')
+        setForm({ name: '', email: '', message: '' }) // clear the form
+      } else {
+        setStatus('error') // Formspree responded, but with an error status
+      }
+    } catch {
+      setStatus('error') // network failed entirely (offline, blocked, etc.)
+    }
   }
 
   return (
@@ -83,9 +107,25 @@ function Contact() {
           onChange={handleChange}
           required
         />
-        <button type="submit" className="btn btn--primary">
-          Send Message
+        <button
+          type="submit"
+          className="btn btn--primary"
+          disabled={status === 'sending'}
+        >
+          {status === 'sending' ? 'Sending...' : 'Send Message'}
         </button>
+
+        {/* Feedback shown after a submit attempt */}
+        {status === 'success' && (
+          <p className="contact__status contact__status--ok">
+            Thanks! Your message has been sent — I'll get back to you soon.
+          </p>
+        )}
+        {status === 'error' && (
+          <p className="contact__status contact__status--err">
+            Something went wrong. Please email me directly at advikrajvansh49@gmail.com.
+          </p>
+        )}
       </form>
     </section>
   )

@@ -1,0 +1,31 @@
+/* Both cursor layers: fixed, non-interactive, on top of everything.
+   margins center each element on the actual pointer coordinate (since we
+   move them with transform translate from their top-left origin). */
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10000;
+  mix-blend-mode: difference; /* invert against whatever is underneath */
+  will-change: transform;
+}
+
+.cursor-dot {
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  background: #ffffff;
+}
+
+.cursor-ring {
+  width: 42px;
+  height: 42px;
+  margin: -21px 0 0 -21px;
+  border: 1.5px solid #ffffff;
+}
+
+/* If the user prefers reduced motion, the spring still works but we drop the
+   blend cost; nothing here animates on its own, so no extra guard needed. */

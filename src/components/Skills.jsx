@@ -1,4 +1,8 @@
+import { lazy, Suspense, useEffect, useState } from 'react'
 import './Skills.css'
+
+// 3D planet system loads lazily, only on capable devices.
+const SkillsGalaxy = lazy(() => import('./effects/SkillsGalaxy.jsx'))
 
 // An array of categories. Each category has a title and its OWN
 // array of skill names. This nested shape (array inside an object
@@ -34,9 +38,35 @@ const skillCategories = [
 ]
 
 function Skills() {
+  // Show the 3D planet system on capable devices; the grid below is always
+  // present (accessible content + mobile/reduced-motion fallback).
+  const [show3d, setShow3d] = useState(false)
+  useEffect(() => {
+    const fine = window.matchMedia('(pointer: fine)').matches
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const wide = window.innerWidth > 820
+    let webgl = false
+    try {
+      const c = document.createElement('canvas')
+      webgl = !!(c.getContext('webgl') || c.getContext('experimental-webgl'))
+    } catch {
+      webgl = false
+    }
+    if (fine && wide && !reduce && webgl) setShow3d(true)
+  }, [])
+
   return (
     <section id="skills" className="skills">
       <h2 className="section-title">Skills</h2>
+
+      {show3d && (
+        <div className="skills__galaxy">
+          <Suspense fallback={null}>
+            <SkillsGalaxy categories={skillCategories} />
+          </Suspense>
+          <p className="skills__hint">Hover a planet to explore</p>
+        </div>
+      )}
 
       <div className="skills__grid">
         {/* OUTER map: one card per category */}

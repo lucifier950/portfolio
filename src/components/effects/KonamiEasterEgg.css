@@ -1,0 +1,8 @@
+/* Full-screen overlay for the confetti. Sits above content but never
+   intercepts pointer events, so the page stays fully usable. */
+.konami-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+}

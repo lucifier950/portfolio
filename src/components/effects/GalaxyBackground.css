@@ -1,0 +1,11 @@
+/* Full-viewport container for the R3F canvas, behind all content. */
+.galaxy-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.galaxy-bg canvas {
+  display: block;
+}

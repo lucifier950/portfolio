@@ -3,14 +3,99 @@
      calc() subtracts the navbar's height so it doesn't overflow. */
   min-height: calc(100vh - 73px);
 
+  position: relative; /* positioning context for the scroll hint */
   display: flex;
   align-items: center; /* vertically center the content */
   padding: 32px;
   scroll-margin-top: 80px;
+  overflow: hidden; /* contain the masked-letter overflow + parallax */
+}
+
+/* Layer that the scroll-exit transform drives (blur/scale/fade).
+   z-index:1 keeps the text above the 3D canvas (z-index:0). */
+.hero__scroll-wrap {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  will-change: transform, filter, opacity;
 }
 
 .hero__content {
   max-width: 760px; /* don't let text stretch too wide to read */
+  will-change: transform; /* GPU hint for the mouse parallax */
+}
+
+/* ===== Letter-by-letter masked reveal ===== */
+.hero__name {
+  font-size: 3.5rem;
+  line-height: 1.1;
+  color: var(--color-text);
+  margin-bottom: 8px;
+  display: flex;
+  flex-wrap: wrap; /* long name wraps gracefully on narrow screens */
+}
+
+/* Each glyph lives in an overflow-hidden window; the inner span starts
+   below (110%) and slides up into view, so letters appear to rise from
+   behind a mask edge. */
+.hero__letter-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.12em; /* headroom so descenders (g, y) aren't clipped */
+}
+
+.hero__letter {
+  display: inline-block;
+  white-space: pre; /* preserves the width of the space character */
+}
+
+/* Dark mode: a soft sky glow behind the name = depth without hurting contrast. */
+[data-theme='dark'] .hero__name {
+  text-shadow: 0 0 44px rgba(56, 189, 248, 0.22);
+}
+
+/* ===== Animated scroll cue ===== */
+.hero__scroll-hint {
+  position: absolute;
+  bottom: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-text-muted);
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+.hero__scroll-line {
+  width: 1px;
+  height: 50px;
+  background: var(--color-border);
+  position: relative;
+  overflow: hidden;
+}
+
+/* A bright segment falls down the line on a loop — the "keep scrolling" pulse. */
+.hero__scroll-line::after {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 45%;
+  background: var(--color-primary);
+  animation: scrollPulse 1.8s var(--ease-out-expo) infinite;
+}
+
+@keyframes scrollPulse {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(260%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__scroll-line::after { animation: none; opacity: 0.5; }
 }
 
 .hero__greeting {
@@ -20,23 +105,52 @@
   margin-bottom: 8px;
 }
 
-.hero__name {
-  font-size: 3.5rem;
-  line-height: 1.1;
-  color: var(--color-text);
-  margin-bottom: 8px;
-}
-
 .hero__role {
   font-size: 2rem;
-  color: var(--color-text-muted);
   margin-bottom: 24px;
+  font-weight: 700;
+  /* Blue gradient text to match the night-sky look. */
+  background: linear-gradient(90deg, #4f9bff, #8ab4ff 60%, #6f7bff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 .hero__tagline {
   font-size: 1.15rem;
   color: var(--color-text-muted);
   margin-bottom: 32px;
+}
+
+/* ===== Floating tech badges ===== */
+.hero__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  list-style: none;
+  margin-bottom: 32px;
+}
+
+.hero__badge {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border);
+  cursor: default;
+  /* transform is owned by Framer (bob + hover); we only animate the
+     non-transform props here so the two never fight. */
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.hero__badge:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 8px 22px -6px rgba(56, 189, 248, 0.55);
 }
 
 /* The row of buttons */
@@ -65,12 +179,14 @@
 }
 
 .btn--primary {
-  background-color: var(--color-primary);
+  background: linear-gradient(135deg, #5aa2ff, #3b6fff);
   color: #ffffff;
+  box-shadow: 0 8px 24px -8px rgba(79, 155, 255, 0.6);
 }
 
 .btn--primary:hover {
-  background-color: var(--color-primary-hover);
+  background: linear-gradient(135deg, #6fb0ff, #4f7bff);
+  box-shadow: 0 12px 32px -8px rgba(79, 155, 255, 0.85);
 }
 
 .btn--outline {
