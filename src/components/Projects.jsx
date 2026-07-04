@@ -7,6 +7,22 @@ import './Projects.css'
 // one <ProjectCard>. `tech` is an array, `repo` is the GitHub URL.
 const projects = [
   {
+    title: 'Heart Disease & Cardiovascular Risk Prediction',
+    period: '2026',
+    description:
+      'An end-to-end machine learning pipeline predicting cardiovascular risk on 8,700+ patient records. Engineered domain-driven features and benchmarked Logistic Regression, Random Forest, and XGBoost — reaching 88.5% accuracy and a 0.877 F1-score, with SMOTE to handle class imbalance.',
+    tech: ['Python', 'Scikit-Learn', 'XGBoost', 'Pandas', 'SMOTE', 'EDA'],
+    repo: 'https://github.com/lucifier950/Heart-Disease-Heart-Attack-Risk-Prediction',
+  },
+  {
+    title: 'SkillPath – EdTech Learning Platform',
+    period: '2026',
+    description:
+      'A responsive multi-page React app with client-side routing (React Router v7). Features Google OAuth 2.0 sign-in and Firebase phone-number authentication with OTP verification, controlled validated forms, and a custom neumorphic UI built with Tailwind CSS.',
+    tech: ['React', 'React Router', 'Tailwind CSS', 'Firebase Auth', 'Google OAuth', 'Vite'],
+    repo: 'https://github.com/lucifier950/SKILLPATH',
+  },
+  {
     title: 'Mann-o-meter',
     period: 'Nov 2025 – Dec 2025',
     description:
