@@ -17,7 +17,7 @@ function About() {
       <div className="about__body">
         {/* Intro paragraphs, based on your resume summary */}
         <p>
-          I'm a 2nd-year B.Tech Computer Science student at JIIT, Noida,
+          I'm a 3rd-year B.Tech Computer Science student at JIIT, Noida,
           with a strong foundation in <strong>C++</strong>,{' '}
           <strong>Python</strong>, <strong>Machine Learning</strong>, and{' '}
           <strong>SQL</strong>. I enjoy turning ideas into real, working
