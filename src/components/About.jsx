@@ -5,7 +5,7 @@ import './About.css'
 const stats = [
   { value: '7.6', label: 'CGPA / 10' },
   { value: '200+', label: 'LeetCode Solved' },
-  { value: '3', label: 'Projects Built' },
+  { value: '5', label: 'Projects Built' },
   { value: '1', label: 'IIT Delhi Cert' },
 ]
 

@@ -33,7 +33,7 @@ const education = {
 
 const achievements = [
   { to: 200, suffix: '+', label: 'LeetCode Problems', sub: 'C++ · DSA fundamentals' },
-  { to: 3, suffix: '', label: 'Projects Built', sub: 'Flask · C++ · React' },
+  { to: 5, suffix: '', label: 'Projects Built', sub: 'Flask · C++ · React' },
   { to: 20, suffix: '+', label: 'Technologies', sub: 'Languages, libs & tools' },
   { to: 2, suffix: '', label: 'Certifications & Workshops', sub: 'IIT Delhi · JIIT' },
 ]
