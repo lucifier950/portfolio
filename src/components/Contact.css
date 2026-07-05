@@ -69,7 +69,9 @@
 /* ---------------- two-column layout ---------------- */
 .mc__grid {
   display: grid;
-  grid-template-columns: 0.9fr 1.1fr;
+  /* minmax(0, …) lets tracks shrink below their content's min-content width,
+     so a long nowrap email can't force the column wider than the screen. */
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
   gap: 34px;
   align-items: start;
 }
@@ -81,6 +83,7 @@
   flex-direction: column;
   gap: 16px;
   padding-left: 34px;
+  min-width: 0; /* allow the column (and its cards) to shrink on narrow screens */
 }
 .mc__line {
   position: absolute;
@@ -775,10 +778,20 @@
 
 /* ---------------- responsive ---------------- */
 @media (max-width: 900px) {
-  .mc__grid { grid-template-columns: 1fr; gap: 40px; }
+  .mc__grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
 }
 @media (max-width: 620px) {
   .mc__channels { padding-left: 30px; }
+  .mc__inner { padding: 0 20px; }
   .mc-form { padding: 22px 18px 4px; }
   .mc-card__hint { display: none; }
+  .mc-card { padding: 16px 14px; gap: 13px; }
+  .mc-card__icon { width: 44px; height: 44px; }
+  /* let the full email/handle wrap onto a second line instead of being
+     clipped by the ellipsis on a narrow phone screen */
+  .mc-card__value {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    font-size: 0.9rem;
+  }
 }
